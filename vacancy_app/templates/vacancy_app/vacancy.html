@@ -11,14 +11,15 @@
       </div>
       <div class="col-12 col-lg-8">
         <section class="pl-3">
-          <a href="#"><img src="{{ vacancy.company.logo.url  }}" width="130" height="80" alt=""></a>
+          <a href="{% url 'companies' vacancy.company.id %}"><img src="{{ vacancy.company.logo.url  }}" width="130" height="80" alt=""></a>
           <div class="d-flex align-items-baseline align-content-baseline">
             <h1 class="h2 mt-4 font-weight-bold" >{{ vacancy.title }}</h1>
             <p class="m-0 pl-3">{{ vacancy.salary_min }} – {{ vacancy.salary_max }}  Р</p>
           </div>
-          <p class="mt-2">Бэкенд • Средний (Middle) • PHP • PostgreSQL • MySQL • Node.js • Laravel • Symfony • Yii framework • Sails.js • Rabbitmq • Kafka</p>
-          <p class="text-muted mb-4">Primal Assault (15-30 человек), Рязань или удаленно</p>
+          <p class="mt-2">{{ vacancy.skills }}Бэкенд • Средний (Middle) • PHP • PostgreSQL • MySQL • Node.js • Laravel • Symfony • Yii framework • Sails.js • Rabbitmq • Kafka</p>
+          <p class="text-muted mb-4">Primal Assault ({{ vacancy.company.employee_count  }} человек), {{ vacancy.company.location  }}Рязань или удаленно</p>
           <div style="line-height: 1.8;">
+            <p>{{ vacancy.description }}</p>
             <p>Финтех компаниявходит в международную группу  и занимается развитием факторингового бизнеса. В связи с расширением штата, мы хотим усилить нашу команду Backend-разработчиком, для работы над улучшением продуктов компании.</p>
             <p><b>Мы предлагаем: </b><br>
               Оформление по ТК РФ<br>
