@@ -54,6 +54,7 @@
               <img class="mx-auto d-block mw-100" src="{{ company.logo.url }}"  alt="">
             </a>
             <div class="card-body">
+              <p class="card-text mb-2">{{ company.name|capfirst }}</p>
               <p class="card-text"><a href="{% url 'companies' company.id %}">{{ company.vacancies.all.count  }} вакансий</a></p>
             </div>
           </div>
