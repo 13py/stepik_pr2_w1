@@ -26,6 +26,13 @@ from vacancy_app.views import VacancySpecView
 from vacancy_app.views import VacancyView
 from vacancy_app.views import my_handler404
 from vacancy_app.views import my_handler500
+from vacancy_app.views import MyLoginView
+from vacancy_app.views import MyLogoutView
+from vacancy_app.views import MyCompanyVacancyView
+from vacancy_app.views import MyCompanyView
+from vacancy_app.views import MyCompanyVacanciesView
+from vacancy_app.views import RegisterView
+from vacancy_app.views import SentRequestView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -34,7 +41,14 @@ urlpatterns = [
     path('vacancies/cat/<str:cat>/', VacancySpecView.as_view(), name='vacancies_cat'),
     path('companies/<int:id>/', CardCompanyView.as_view(), name='companies'),
     path('vacancies/<int:id>/', VacancyView.as_view(), name='vacancy'),
-    path('about/', AboutView.as_view(), name='about')
+    path('about/', AboutView.as_view(), name='about'),
+    path('vacancies/<int:vacancy_id>/send', SentRequestView.as_view()),
+    path('mycompany/', MyCompanyView.as_view(), name='my_company'),
+    path('mycompany/vacancies/', MyCompanyVacanciesView.as_view()),
+    path('mycompany/vacancies/<int:vacancy_id>/', MyCompanyVacancyView.as_view(), name='company-edit'),
+    path('login/', MyLoginView.as_view(), name='login'),
+    path('register/', RegisterView.as_view(), name='register'),
+    path('logout/', MyLogoutView.as_view(), name='logout')
 ]
 
 

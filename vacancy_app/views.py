@@ -1,8 +1,14 @@
-from django.shortcuts import get_object_or_404
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
+from django.contrib.auth.views import LoginView, LogoutView
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404, redirect
 from django.shortcuts import render
 from django.views import View
+from django.views.generic import CreateView
 
-from .models import Specialty, Company, Vacancy
+from .form import RegisterForm, ApplicationForm, MyCompanyForm
+from .models import Specialty, Company, Vacancy, Application
 
 
 class MainView(View):
@@ -50,16 +56,150 @@ class CardCompanyView(View):
 
 class VacancyView(View):
     def get(self, request, id):
+        print(request.user.id)
+        vacancy_form = ApplicationForm(request.POST)
         vacancy = get_object_or_404(Vacancy, id=id)
+        print(id)
+        curent_user = request.user.id
+        print(curent_user)
+        user = User.objects.get(id=curent_user).id
+        print(user)
+        print('конец GET!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
         context = {
-            'vacancy': vacancy
+            'vacancy': vacancy,
+            #'vacancy_form': vacancy_form,
+            #'user': user
         }
         return render(request, 'vacancy_app/vacancy.html', context=context)
+
+    def post(self, request, id):
+        print('ПРИВЕТ', id)
+        vacancy_form = ApplicationForm(request.POST)
+
+        # print(vacancy_form)
+        # print(request)
+        # print(vacancy_form.is_valid())
+        # print(vacancy_form.errors)
+        curent_user = request.user.id
+        # print('post curent_user ', curent_user)
+        user = User.objects.get(id=curent_user).id
+        vacancy = Vacancy.objects.filter(id=id).first().id
+        # print('id', id)
+        print(vacancy_form.is_valid())
+        print(vacancy_form.fields.get('written_username'), 'user')
+        # vacancy_form.fields['vacancy'] = id
+        # vacancy_form.fields['user'] = request.user.id
+        print(vacancy_form.fields.get('user'), 'user')
+        # print(vacancy_form)
+        print(vacancy_form.is_valid())
+        print(vacancy_form.errors)
+        print(request.user.id)
+        print('вакансия',)
+
+        if vacancy_form.is_valid():
+            print('ВАЛИДАЦИЯ')
+            vacancy_send = vacancy_form.cleaned_data
+            print('vacancy', vacancy_send)
+            print(vacancy_send['written_cover_letter'])
+            print(Vacancy.objects.filter(id=id).first())
+            print('vacancy_send', vacancy_send)
+            vacancy_send['user'] = request.user
+            vacancy_send['vacancy'] = vacancy
+            print(vacancy_send)
+            print(vacancy)
+            Application.objects.create(written_username=vacancy_send['written_username'],
+                                       written_phone=vacancy_send['written_phone'],
+                                       written_cover_letter=vacancy_send['written_cover_letter'],
+                                       user=vacancy_send['user'],
+                                       vacancy=Vacancy.objects.get(id=id),
+                                       )
+
+        return redirect('main')
 
 
 class AboutView(View):
     def get(self, request):
         return render(request, 'vacancy_app/about.html')
+
+
+class SentRequestView(View):
+    def post(self, request):
+        return render(request, 'vacancy_app/sent.html')
+
+
+class MyCompanyView(View):
+    def get(self, request):
+        print('мои компании', Company.objects.filter(owner=request.user).first)
+        my_company = Company.objects.filter(owner=request.user).first()
+        print(my_company.id)
+        company_form = MyCompanyForm(request.POST)
+        print(request.method)
+        if Company.objects.filter(owner=request.user):
+            template = 'vacancy_app/company-edit.html'
+            context = {'my_company': my_company}
+        else:
+            template = 'vacancy_app/company-create.html'
+        return render(request, template, context=context)
+
+    def post(self, request):
+        company_form = MyCompanyForm(request.POST)
+        print(company_form.is_valid())
+        if company_form.is_valid():
+            print('ВАЛИДАЦИЯ ПРОЙДЕНА')
+            company_clear_data = company_form.cleaned_data
+            print(company_clear_data)
+            print(company_form.errors)
+            my_company = Company.objects.filter(owner=request.user).first()
+            print(my_company.description)
+            my_company.name = company_clear_data['name']
+            my_company.location = company_clear_data['location']
+            my_company.logo.url = company_clear_data['logo']
+            my_company.employee_count = company_clear_data['employee_count']
+            my_company.owner = request.user
+            my_company.save()
+        return redirect('main')
+
+
+
+class MyCompanyVacanciesView(View):
+    def get(self, request):
+        return render(request, 'vacancy_app/vacancy-edit.html')
+
+
+class MyCompanyVacancyView(View):
+    def get(self, request, vacancy_id):
+        return render(request, 'vacancy_app/vacancy-list.html')
+
+
+class MyLoginView(LoginView):
+    redirect_authenticated_user = True
+    template_name = 'vacancy_app/login.html'
+
+    # def post(self, request):
+    #     return render(request, 'vacancy_app/login.html')
+
+
+class RegisterView(View):
+    def get(self, request):
+        return render(request, 'vacancy_app/register.html' )
+
+    def post(self, request):
+        register_form = RegisterForm(request.POST)
+        # print(register_form)
+        # print(register_form.fields)
+        if register_form.is_valid():
+            data_register = register_form.cleaned_data
+            # print(data_register)
+            User.objects.create_user(username=data_register['login'],
+                                     first_name=data_register['first_name'],
+                                     last_name=data_register['last_name'],
+                                     password=data_register['password'])
+        return redirect('main')
+
+
+
+class MyLogoutView(LogoutView):
+    pass
 
 
 def my_handler404(request, exception=None):

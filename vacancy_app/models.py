@@ -1,12 +1,14 @@
+from django.contrib.auth.models import User
 from django.db import models
 
 
 class Company(models.Model):
     name = models.CharField(max_length=50)
     location = models.CharField(max_length=50, blank=True)
-    logo = models.ImageField(blank=True)
+    logo = models.ImageField(upload_to='logo', blank=True)
     description = models.TextField(blank=True)
     employee_count = models.IntegerField(blank=True, null=True)
+    owner = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return self.name
@@ -33,3 +35,11 @@ class Vacancy(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class Application(models.Model):
+    written_username = models.CharField(max_length=100)
+    written_phone = models.CharField(max_length=12)
+    written_cover_letter = models.TextField()
+    vacancy = models.ForeignKey(Vacancy, related_name="applications", on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey(User, related_name="applications", on_delete=models.CASCADE, null=True)
