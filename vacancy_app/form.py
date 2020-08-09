@@ -20,5 +20,3 @@ class MyCompanyForm(forms.ModelForm):
     class Meta:
         model = Company
         fields = ('name', 'location', 'logo', 'description', 'employee_count')
-
-

@@ -113,8 +113,8 @@ class VacancyView(View):
                                        user=vacancy_send['user'],
                                        vacancy=Vacancy.objects.get(id=id),
                                        )
-
-        return redirect('main')
+        vacancy_id = id
+        return redirect(f'/vacancies/{vacancy_id}/send')
 
 
 class AboutView(View):
@@ -123,8 +123,9 @@ class AboutView(View):
 
 
 class SentRequestView(View):
-    def post(self, request):
-        return render(request, 'vacancy_app/sent.html')
+    def get(self, request, vacancy_id):
+        context = {'id': vacancy_id}
+        return render(request, 'vacancy_app/sent.html', context=context)
 
 
 class MyCompanyView(View):
@@ -175,12 +176,24 @@ class MyCompanyView(View):
 
 class MyCompanyVacanciesView(View):
     def get(self, request):
-        return render(request, 'vacancy_app/vacancy-edit.html')
+        polzovat = request.user
+        print(polzovat, polzovat.id)
+        my_company = Company.objects.filter(owner=request.user.id).first()
+        print(my_company)
+        print(my_company.id)
+        my_vacancies = Vacancy.objects.filter(company=my_company.id)
+        print(my_vacancies)
+        context = {'my_vacancies': my_vacancies}
+        return render(request, 'vacancy_app/vacancy-list.html', context=context)
 
 
 class MyCompanyVacancyView(View):
     def get(self, request, vacancy_id):
-        return render(request, 'vacancy_app/vacancy-list.html')
+        vacancy = Vacancy.objects.filter(id=vacancy_id).first()
+        specialties = Specialty.objects.all()
+
+        context = {'vacancy': vacancy, 'specialties': specialties}
+        return render(request, 'vacancy_app/vacancy-edit.html', context=context)
 
 
 class MyLoginView(LoginView):
