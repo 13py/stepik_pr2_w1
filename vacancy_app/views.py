@@ -129,9 +129,11 @@ class SentRequestView(View):
 
 class MyCompanyView(View):
     def get(self, request):
-        print('мои компании', Company.objects.filter(owner=request.user).first)
+        print('мои компании', Company.objects.filter(owner=request.user))
         my_company = Company.objects.filter(owner=request.user).first()
         print(my_company.id)
+        print(my_company.name)
+        print(my_company.location)
         company_form = MyCompanyForm(request.POST)
         print(request.method)
         if Company.objects.filter(owner=request.user):
@@ -143,20 +145,30 @@ class MyCompanyView(View):
 
     def post(self, request):
         company_form = MyCompanyForm(request.POST)
+        print('company_form', company_form)
         print(company_form.is_valid())
         if company_form.is_valid():
             print('ВАЛИДАЦИЯ ПРОЙДЕНА')
+
             company_clear_data = company_form.cleaned_data
             print(company_clear_data)
             print(company_form.errors)
             my_company = Company.objects.filter(owner=request.user).first()
             print(my_company.description)
             my_company.name = company_clear_data['name']
+            print(my_company.location, 'локация')
             my_company.location = company_clear_data['location']
-            my_company.logo.url = company_clear_data['logo']
+            print(my_company.location)
+            print('перед if')
+            if company_clear_data['employee_count']:
+                print('лого путь есть')
+                print(my_company.logo)
+                print(company_clear_data['employee_count'])
+                #my_company.logo = company_clear_data['logo']
             my_company.employee_count = company_clear_data['employee_count']
-            my_company.owner = request.user
+            #my_company.owner = request.user
             my_company.save()
+            print(my_company.employee_count)
         return redirect('main')
 
 

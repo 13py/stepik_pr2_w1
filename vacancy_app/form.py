@@ -19,6 +19,6 @@ class ApplicationForm(forms.ModelForm):
 class MyCompanyForm(forms.ModelForm):
     class Meta:
         model = Company
-        fields = ('name', 'logo', 'location', 'description', 'employee_count')
+        fields = ('name', 'location', 'logo', 'description', 'employee_count')
 
 

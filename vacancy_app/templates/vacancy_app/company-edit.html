@@ -20,7 +20,7 @@
               <p class="alert alert-info" role="alert">
                 Информация о компании обновлена
               </p>
-              <form action="" method="post">
+              <form method="post">
                   {% csrf_token %}
                 <div class="row">
                   <div class="col-12 col-md-6">
@@ -52,19 +52,19 @@
                   <div class="col-12 col-md-6">
                     <div class="form-group pb-2">
                       <label class="mb-2 text-dark" for="companyTeam">Количество человек в компании</label>
-                      <input class="form-control" type="text" value="{{ my_company.employee_count }}" id="companyTeam">
+                      <input class="form-control" type="text" name="employee_count" value="{{ my_company.employee_count }}" id="companyTeam" >
                     </div>
                   </div>
                   <div class="col-12 col-md-6">
                     <div class="form-group pb-2">
                       <label class="mb-2 text-dark" for="companyLocation">География</label>
-                      <input class="form-control" type="text" value="{{ my_company.location }}" id="companyLocation">
+                      <input class="form-control" type="text" name="location" value="{{ my_company.location }}" id="companyLocation" >
                     </div>
                   </div>
                 </div>
                 <div class="form-group pb-2">
                   <label class="mb-2 text-dark" for="companyInfo">Информация о&nbsp;компании</label>
-                  <textarea class="form-control" rows="4" id="companyInfo" style="color:#000;">{{ my_company.description }}</textarea>
+                  <textarea class="form-control" rows="4" name="description" id="companyInfo" style="color:#000;">{{ my_company.description }}</textarea>
                 </div>
                 <div class="form-group">
                   <input type="submit" class="btn btn-info" value="Сохранить">
