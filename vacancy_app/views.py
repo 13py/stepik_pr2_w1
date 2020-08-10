@@ -7,7 +7,7 @@ from django.shortcuts import render
 from django.views import View
 from django.views.generic import CreateView
 
-from .form import RegisterForm, ApplicationForm, MyCompanyForm
+from .form import RegisterForm, ApplicationForm, MyCompanyForm, EditVacancyForm
 from .models import Specialty, Company, Vacancy, Application
 
 
@@ -130,19 +130,22 @@ class SentRequestView(View):
 
 class MyCompanyView(View):
     def get(self, request):
-        print('мои компании', Company.objects.filter(owner=request.user))
+        # print('мои компании', Company.objects.filter(owner=request.user))
         my_company = Company.objects.filter(owner=request.user).first()
-        print(my_company.id)
-        print(my_company.name)
-        print(my_company.location)
-        company_form = MyCompanyForm(request.POST)
-        print(request.method)
+        # print(my_company.id)
+        # print(my_company.name)
+        # print(my_company.location)
+        # company_form = MyCompanyForm(request.POST)
+        # print(request.method)
         if Company.objects.filter(owner=request.user):
             template = 'vacancy_app/company-edit.html'
             context = {'my_company': my_company}
+            return render(request, template, context=context)
         else:
             template = 'vacancy_app/company-create.html'
-        return render(request, template, context=context)
+            context = dict()
+            return render(request, template, context=context)
+
 
     def post(self, request):
         company_form = MyCompanyForm(request.POST)
@@ -192,8 +195,28 @@ class MyCompanyVacancyView(View):
         vacancy = Vacancy.objects.filter(id=vacancy_id).first()
         specialties = Specialty.objects.all()
 
-        context = {'vacancy': vacancy, 'specialties': specialties}
+        active_spec = vacancy.specialty
+        print(active_spec.id)
+        context = {'vacancy': vacancy,
+                   'specialties': specialties,
+                   'active_spec': active_spec}
         return render(request, 'vacancy_app/vacancy-edit.html', context=context)
+
+    def post(self, request, vacancy_id):
+        edit_vacancy = EditVacancyForm(request.POST)
+        if edit_vacancy.is_valid():
+            print('валидный')
+            vacancy_cleaned = edit_vacancy.cleaned_data
+            vacancy = Vacancy.objects.filter(id=vacancy_id).first()
+            vacancy.title = vacancy_cleaned['title']
+            vacancy.salary_min = vacancy_cleaned['salary_min']
+            vacancy.salary_max = vacancy_cleaned['salary_max']
+            vacancy.skills = vacancy_cleaned['skills']
+            vacancy.description = vacancy_cleaned['description']
+            vacancy.specialty = vacancy_cleaned['specialty']
+            vacancy.save()
+
+        return redirect('main')
 
 
 class MyLoginView(LoginView):
@@ -221,6 +244,20 @@ class RegisterView(View):
                                      password=data_register['password'])
         return redirect('main')
 
+
+class MyCompanyMakeView(View):
+    def get(self, request):
+        #company_form = MyCompanyForm(request.POST, request.FILES)
+        return render(request, 'vacancy_app/company-edit.html')
+
+    def post(self, request):
+        company_form = MyCompanyForm(request.POST, request.FILES)
+        if company_form.is_valid():
+            company = company_form.save(commit=False)
+            company.owner = request.user
+            company.save()
+            company_form.save()
+        return redirect('main')
 
 
 class MyLogoutView(LogoutView):
