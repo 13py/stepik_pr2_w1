@@ -247,7 +247,6 @@ class RegisterView(View):
 
 class MyCompanyMakeView(View):
     def get(self, request):
-        #company_form = MyCompanyForm(request.POST, request.FILES)
         return render(request, 'vacancy_app/company-edit.html')
 
     def post(self, request):
@@ -259,6 +258,21 @@ class MyCompanyMakeView(View):
             company_form.save()
         return redirect('main')
 
+
+class MyVacancyCreate(View):
+    def get(self, request):
+        specialties = Specialty.objects.all()
+        context = {'specialties': specialties}
+        return render(request, 'vacancy_app/vacancy-edit.html', context=context)
+
+    def post(self, request):
+        edit_vacancy_form = EditVacancyForm(request.POST)
+        if edit_vacancy_form.is_valid():
+            new_vacancy = edit_vacancy_form.save(commit=False)
+            new_vacancy.company = Company.objects.filter(owner=request.user).first()
+            new_vacancy.save()
+            edit_vacancy_form.save()
+        return redirect('main')
 
 class MyLogoutView(LogoutView):
     pass
