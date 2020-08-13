@@ -149,30 +149,30 @@ class MyCompanyView(View):
 
     def post(self, request):
         company_form = MyCompanyForm(request.POST)
-        print('company_form', company_form)
-        print(company_form.is_valid())
+        # print('company_form', company_form)
+        # print(company_form.is_valid())
         if company_form.is_valid():
-            print('ВАЛИДАЦИЯ ПРОЙДЕНА')
+            # print('ВАЛИДАЦИЯ ПРОЙДЕНА')
 
             company_clear_data = company_form.cleaned_data
-            print(company_clear_data)
-            print(company_form.errors)
+            # print(company_clear_data)
+            # print(company_form.errors)
             my_company = Company.objects.filter(owner=request.user).first()
-            print(my_company.description)
+            # print(my_company.description)
             my_company.name = company_clear_data['name']
-            print(my_company.location, 'локация')
+            # print(my_company.location, 'локация')
             my_company.location = company_clear_data['location']
-            print(my_company.location)
-            print('перед if')
-            if company_clear_data['employee_count']:
-                print('лого путь есть')
-                print(my_company.logo)
-                print(company_clear_data['employee_count'])
+            # print(my_company.location)
+            # print('перед if')
+            # if company_clear_data['employee_count']:
+            #     print('лого путь есть')
+            #     print(my_company.logo)
+            #     print(company_clear_data['employee_count'])
                 #my_company.logo = company_clear_data['logo']
             my_company.employee_count = company_clear_data['employee_count']
             #my_company.owner = request.user
             my_company.save()
-            print(my_company.employee_count)
+            # print(my_company.employee_count)
         return redirect('main')
 
 
@@ -180,12 +180,12 @@ class MyCompanyView(View):
 class MyCompanyVacanciesView(View):
     def get(self, request):
         polzovat = request.user
-        print(polzovat, polzovat.id)
+        # print(polzovat, polzovat.id)
         my_company = Company.objects.filter(owner=request.user.id).first()
-        print(my_company)
-        print(my_company.id)
+        # print(my_company)
+        # print(my_company.id)
         my_vacancies = Vacancy.objects.filter(company=my_company.id)
-        print(my_vacancies)
+        # print(my_vacancies)
         context = {'my_vacancies': my_vacancies}
         return render(request, 'vacancy_app/vacancy-list.html', context=context)
 
@@ -273,6 +273,7 @@ class MyVacancyCreate(View):
             new_vacancy.save()
             edit_vacancy_form.save()
         return redirect('main')
+
 
 class MyLogoutView(LogoutView):
     pass
