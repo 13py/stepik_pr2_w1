@@ -275,6 +275,16 @@ class MyVacancyCreate(View):
         return redirect('main')
 
 
+class SearchView(View):
+    def get(self, request):
+        return render(request, 'vacancy_app/search.html')
+
+
+class MyResumeView(View):
+    def get(self, request):
+        return render(request, 'vacancy_app/resume-create.html')
+
+
 class MyLogoutView(LogoutView):
     pass
 
