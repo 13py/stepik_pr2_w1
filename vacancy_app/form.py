@@ -1,6 +1,6 @@
 from django import forms
 
-from vacancy_app.models import Application, Company, Vacancy
+from vacancy_app.models import Application, Company, Vacancy, Resume
 
 
 class RegisterForm(forms.Form):
@@ -35,3 +35,17 @@ class EditVacancyForm(forms.ModelForm):
 
 class SearchForm(forms.Form):
     s = forms.CharField()
+
+
+class ResumeForm(forms.ModelForm):
+    class Meta:
+        model = Resume
+        fields = ('name',
+                  'surname',
+                  'status',
+                  'salary',
+                  'specialty',
+                  'grade',
+                  'education',
+                  'experience',
+                  'portfolio')

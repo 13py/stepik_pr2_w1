@@ -8,16 +8,15 @@ from django.shortcuts import render
 from django.views import View
 from django.views.generic import CreateView
 
-from .form import RegisterForm, ApplicationForm, MyCompanyForm, EditVacancyForm, SearchForm
-from .models import Specialty, Company, Vacancy, Application
+from .form import RegisterForm, ApplicationForm, MyCompanyForm, EditVacancyForm, SearchForm, ResumeForm
+from .models import Specialty, Company, Vacancy, Application, Status, Grade
 
 
 class MainView(View):
     def get(self, request):
         specialties = Specialty.objects.all()
         companies = Company.objects.all()
-        search = SearchForm(request.GET)
-        print(search)
+        # search = SearchForm(request.GET)
 
         context = {
             'specialties': specialties,
@@ -60,19 +59,19 @@ class CardCompanyView(View):
 
 class VacancyView(View):
     def get(self, request, id):
-        print(request.user.id)
+        # print(request.user.id)
         vacancy_form = ApplicationForm(request.POST)
         vacancy = get_object_or_404(Vacancy, id=id)
-        print(id)
-        curent_user = request.user.id
-        print(curent_user)
-        user = User.objects.get(id=curent_user).id
-        print(user)
-        print('конец GET!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+        # print(id)
+        # curent_user = request.user.id
+        # print(curent_user)
+        # user = User.objects.get(id=curent_user).id
+        # print(user)
+        # print('конец GET!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
         context = {
             'vacancy': vacancy,
             'vacancy_form': vacancy_form,
-            'user': user
+            # 'user': user
         }
         return render(request, 'vacancy_app/vacancy.html', context=context)
 
@@ -298,7 +297,40 @@ class SearchView(View):
 
 class MyResumeView(View):
     def get(self, request):
-        return render(request, 'vacancy_app/resume-create.html')
+        # print(dir(request.user.resume), 'резюме')
+        try:
+            request.user.resume
+            print('СУЩЕСТВУЕТ')
+            template = 'vacancy_app/resume-edit.html'
+        except User.resume.RelatedObjectDoesNotExist:
+            print('НЕ СУЩЕСТВУЕТ')
+            template = 'vacancy_app/resume-create.html'
+
+        return render(request, template)
+
+
+class MyResumeCreateView(View):
+    def get(self, request):
+        statuses = Status.objects.all()
+        grades = Grade.objects.all()
+        specialties = Specialty.objects.all()
+
+        context = {'statuses': statuses,
+                   'grades': grades,
+                   'specialties': specialties}
+        return render(request, 'vacancy_app/resume-edit.html', context=context)
+    def post(self, request):
+        my_resume = ResumeForm(request.POST)
+        if my_resume.is_valid():
+            resume = my_resume.save(commit=False)
+            resume.user = request.user
+            my_resume.save()
+        return redirect('main')
+
+
+class MyResumeEditView(View):
+    def get(self, request):
+        return render(request, 'vacancy_app/resume-edit.html')
 
 
 class MyLogoutView(LogoutView):

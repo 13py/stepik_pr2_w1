@@ -18,7 +18,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path
 
-from vacancy_app.views import AboutView, MyVacancyCreate, MyResumeView, SearchView
+from vacancy_app.views import AboutView, MyVacancyCreate, MyResumeView, SearchView, MyResumeCreateView, MyResumeEditView
 from vacancy_app.views import CardCompanyView
 from vacancy_app.views import MainView
 from vacancy_app.views import MyCompanyMakeView
@@ -53,6 +53,8 @@ urlpatterns = [
     path('register/', RegisterView.as_view(), name='register'),
     path('logout/', MyLogoutView.as_view(), name='logout'),
     path('myresume/', MyResumeView.as_view(), name='my_resume'),
+    path('myresume/create/', MyResumeCreateView.as_view(), name='resume-create'),
+    path('myresume/edit/', MyResumeEditView.as_view(), name='resume-edit'),
     path('search/', SearchView.as_view(), name='search'),
 ]
 
