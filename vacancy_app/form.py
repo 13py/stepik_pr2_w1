@@ -31,3 +31,7 @@ class EditVacancyForm(forms.ModelForm):
                   'description',
                   'salary_min',
                   'salary_max')
+
+
+class SearchForm(forms.Form):
+    s = forms.CharField()

@@ -31,7 +31,7 @@ class Vacancy(models.Model):
     description = models.TextField()
     salary_min = models.DecimalField(max_digits=10, decimal_places=0)
     salary_max = models.DecimalField(max_digits=10, decimal_places=0)
-    published_at = models.DateField(blank=True, null=True)
+    published_at = models.DateField(auto_now_add=True, blank=True, null=True)
 
     def __str__(self):
         return self.title
@@ -54,7 +54,7 @@ class Grade(models.Model):
 
 
 class Resume(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, related_name='resume', on_delete=models.CASCADE)
     name = models.CharField(max_length=50)
     surname = models.CharField(max_length=50)
     status = models.ForeignKey(Status, on_delete=models.CASCADE)

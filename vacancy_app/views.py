@@ -1,13 +1,14 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.contrib.auth.views import LoginView, LogoutView
+from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.shortcuts import render
 from django.views import View
 from django.views.generic import CreateView
 
-from .form import RegisterForm, ApplicationForm, MyCompanyForm, EditVacancyForm
+from .form import RegisterForm, ApplicationForm, MyCompanyForm, EditVacancyForm, SearchForm
 from .models import Specialty, Company, Vacancy, Application
 
 
@@ -15,6 +16,9 @@ class MainView(View):
     def get(self, request):
         specialties = Specialty.objects.all()
         companies = Company.objects.all()
+        search = SearchForm(request.GET)
+        print(search)
+
         context = {
             'specialties': specialties,
             'companies': companies
@@ -67,8 +71,8 @@ class VacancyView(View):
         print('конец GET!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
         context = {
             'vacancy': vacancy,
-            #'vacancy_form': vacancy_form,
-            #'user': user
+            'vacancy_form': vacancy_form,
+            'user': user
         }
         return render(request, 'vacancy_app/vacancy.html', context=context)
 
@@ -277,7 +281,19 @@ class MyVacancyCreate(View):
 
 class SearchView(View):
     def get(self, request):
-        return render(request, 'vacancy_app/search.html')
+        search = SearchForm(request.GET)
+        print(search)
+        print('это SearchView')
+        print(search.is_valid)
+        if search.is_valid():
+            search_request = search.cleaned_data.get('s')
+            searches = Vacancy.objects.all()
+            #print(search_resaults.filter(Q(title__contains=search_request) | Q(description__contains=search_request)))
+            vacancies = searches.filter(title__contains=search_request)
+            print(search_request)
+
+        context = {'search_request': search_request, 'vacancies': vacancies}
+        return render(request, 'vacancy_app/search.html', context=context)
 
 
 class MyResumeView(View):
