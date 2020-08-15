@@ -17,7 +17,7 @@
         </div>
 
 
-      <p class="text-center pt-1">{{ vacancies.count }} вакансии</p>
+      <p class="text-center pt-1"> {% if result %}{{ vacancies.count }} вакансии {% else %}Ничего не найдено{% endif %}</p>
       {% include "card_vacancy.html" %}
 
     </section>
