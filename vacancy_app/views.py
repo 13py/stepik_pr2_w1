@@ -9,7 +9,7 @@ from django.views import View
 from django.views.generic import CreateView
 
 from .form import RegisterForm, ApplicationForm, MyCompanyForm, EditVacancyForm, SearchForm, ResumeForm
-from .models import Specialty, Company, Vacancy, Application, Status, Grade
+from .models import Specialty, Company, Vacancy, Application, Status, Grade, Resume
 
 
 class MainView(View):
@@ -288,7 +288,7 @@ class SearchView(View):
             search_request = search.cleaned_data.get('s')
             searches = Vacancy.objects.all()
             #print(search_resaults.filter(Q(title__contains=search_request) | Q(description__contains=search_request)))
-            vacancies = searches.filter(title__contains=search_request)
+            vacancies = searches.filter(Q(title__contains=search_request) | Q(description__contains=search_request))
             print(search_request)
 
         context = {'search_request': search_request, 'vacancies': vacancies}
@@ -300,13 +300,38 @@ class MyResumeView(View):
         # print(dir(request.user.resume), 'резюме')
         try:
             request.user.resume
-            print('СУЩЕСТВУЕТ')
+            resume = Resume.objects.filter(user=request.user).first()
+            statuses = Status.objects.all()
+            grades = Grade.objects.all()
+            specialties = Specialty.objects.all()
+            context = {'resume': resume,
+                       'statuses': statuses,
+                       'grades': grades,
+                       'specialties': specialties}
+
             template = 'vacancy_app/resume-edit.html'
         except User.resume.RelatedObjectDoesNotExist:
             print('НЕ СУЩЕСТВУЕТ')
             template = 'vacancy_app/resume-create.html'
+            context = {}
+        return render(request, template, context=context)
 
-        return render(request, template)
+    def post(self, request):
+        my_resume = ResumeForm(request.POST)
+        if my_resume.is_valid():
+            clear_resume = my_resume.cleaned_data
+            resume = Resume.objects.filter(user=request.user).first()
+            resume.name = clear_resume.get('name')
+            resume.surname = clear_resume.get('surname')
+            resume.status = clear_resume.get('status')
+            resume.salary = clear_resume.get('salary')
+            resume.specialty = clear_resume.get('specialty')
+            resume.grade = clear_resume.get('grade')
+            resume.education = clear_resume.get('education')
+            resume.experience = clear_resume.get('experience')
+            resume.portfolio = clear_resume.get('portfolio')
+            resume.save()
+        return redirect('main')
 
 
 class MyResumeCreateView(View):

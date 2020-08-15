@@ -12,13 +12,13 @@
             <div class="col-12 col-md-6">
               <div class="form-group pb-2">
                 <label class="mb-2 text-dark" for="userName">Имя</label>
-                <input class="form-control" type="text" value="Иван" id="userName" name="name">
+                <input class="form-control" type="text" value="{{ resume.name }}" id="userName" name="name">
               </div>
             </div>
             <div class="col-12 col-md-6">
               <div class="form-group pb-2">
                 <label class="mb-2 text-dark" for="userSurname">Фамилия</label>
-                <input class="form-control" type="text" value="Топорыжкин" id="userSurname" name="surname">
+                <input class="form-control" type="text" value="{{ resume.surname }}" id="userSurname" name="surname">
               </div>
             </div>
           </div>
@@ -26,7 +26,7 @@
             <div class="col-12 col-md-6">
               <div class="form-group pb-2">
                 <label class="mb-2 text-dark" for="userReady">Готовность к работе</label>
-                <select class="custom-select mr-sm-2" id="userReady" name="status">
+                <select class="custom-select mr-sm-2" id="userReady" name="status" value="{{ resume.status }}">
                     {% for status in statuses %}
                   <option value="{{ status.id }}">{{ status.status_job }}</option>
                     {% endfor %}
@@ -36,7 +36,7 @@
             <div class="col-12 col-md-6">
               <div class="form-group pb-2">
                 <label class="mb-2 text-dark" for="userPortfolio">Ожидаемое вознаграждение</label>
-                <input class="form-control" type="text" value="120 000" id="userPortfolio" name="salary">
+                <input class="form-control" type="text" value="{{ resume.salary }}" id="userPortfolio" name="salary">
               </div>
             </div>
           </div>
@@ -44,7 +44,7 @@
             <div class="col-12 col-md-6">
               <div class="form-group pb-2">
                 <label class="mb-2 text-dark" for="userSpecialization">Специализация</label>
-                <select class="custom-select mr-sm-2" id="userSpecialization" name="specialty">
+                <select class="custom-select mr-sm-2" id="userSpecialization" name="specialty" value="{{ resume.specialty }}">
                     {% for specialty in specialties %}
                   <option value="{{ specialty.id }}">{{ specialty.title }}</option>
                     {% endfor %}
@@ -54,9 +54,9 @@
             <div class="col-12 col-md-6">
               <div class="form-group pb-2">
                 <label class="mb-2 text-dark" for="userQualification">Квалификация</label>
-                <select class="custom-select mr-sm-2" id="userQualification" name="grade">
+                <select class="custom-select mr-sm-2" id="userQualification" name="grade" value="{{ resume.grade }}">
                     {% for grade in grades %}
-                  <option value="{{ grade.id }}">{{ grade.qualification }}</option>
+                  <option value="{{ grade.id }}" {% if grade.id == resume.grade.id %}selected{% endif %}>{{ grade.qualification }}</option>
                     {% endfor %}
                 </select>
               </div>
@@ -64,16 +64,15 @@
           </div>
           <div class="form-group pb-2">
             <label class="mb-2 text-dark" for="userEducation">Образование</label>
-            <textarea class="form-control text-uppercase" rows="4" id="userEducation" style="color:#000;" name="education">АСТРАХАНСКИЙ ГОСУДАРСТВЕННЫЙ ТЕХНИЧЕСКИЙ УНИВЕРСИТЕТ ИНСТИТУТ РЫБНОГО ХОЗЯЙСТВА, БИОЛОГИИ И ПРИРОДОПОЛЬЗОВАНИЯ, БАКАЛАВР ГОЛОВАСТИКОВЕДЕНИЯ</textarea>
+            <textarea class="form-control text-uppercase" rows="4" id="userEducation" style="color:#000;" name="education">{{ resume.education }}</textarea>
           </div>
           <div class="form-group pb-2">
             <label class="mb-2 text-dark" for="userExperience">Опыт работы</label>
-            <textarea class="form-control" rows="4" id="userExperience" style="color:#000;" name="experience">Астраханская государственная библиотека – администратор базы данных, системный архитектор, 2018-2020
-Астра - инжиниинг, системный интегратор – младший разработчик 2016– 2018</textarea>
+            <textarea class="form-control" rows="4" id="userExperience" style="color:#000;" name="experience">{{ resume.experience }}</textarea>
           </div>
           <div class="form-group pb-3">
             <label class="mb-2 text-dark" for="userPortfolio">Ссылка на портфолио</label>
-            <input class="form-control" type="text" placeholder="http://anylink.github.io" id="userPortfolio" name="portfolio">
+            <input class="form-control" type="text" placeholder="http://anylink.github.io" id="userPortfolio" name="portfolio" value="{{ resume.portfolio }}">
           </div>
           <div class="form-group">
             <input type="submit" class="btn btn-info" value="Сохранить">
