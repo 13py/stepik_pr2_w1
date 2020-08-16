@@ -48,9 +48,15 @@ class Application(models.Model):
 class Status(models.Model):
     status_job = models.CharField(max_length=50)
 
+    def __str__(self):
+        return self.status_job
+
 
 class Grade(models.Model):
     qualification = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.qualification
 
 
 class Resume(models.Model):

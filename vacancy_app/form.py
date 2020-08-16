@@ -77,9 +77,16 @@ class ResumeForm(forms.ModelForm):
                   'education',
                   'experience',
                   'portfolio')
-        # widgets = {
-        #     'name': TextInput(attrs={'class': 'form-control', 'id': 'userName', 'minlength': 3}),
-        #     'surname': TextInput(attrs={'class': 'form-control', 'id': 'userPhone'}),
-        #     'status': forms.Select(attrs={'class': 'custom-select mr-sm-2', 'id': 'userReady'}),
-        #     'salary': IntegerField(attrs={'class': 'form-control', 'id': 'userPortfolio'}),
-        # }
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control', 'id': 'userName', 'minlength': 3}),
+            'surname': forms.TextInput(attrs={'class': 'form-control', 'id': 'userPhone'}),
+            'status': forms.Select(attrs={'class': 'custom-select mr-sm-2', 'id': 'userReady'}),
+            'salary': forms.NumberInput(attrs={'class': 'form-control', 'id': 'userPortfolio'}),
+            'specialty': forms.Select(attrs={'class': 'custom-select mr-sm-2', 'id': 'userSpecialization'}),
+            'grade': forms.Select(attrs={'class': 'custom-select mr-sm-2', 'id': 'userQualification'}),
+            'education': forms.Textarea(attrs={'class': 'form-control text-uppercase', 'id': 'userEducation',
+                                               'rows': '4'}),
+            'experience': forms.Textarea(attrs={'class': 'form-control', 'id': 'userExperience', 'rows': '4'}),
+            'portfolio': forms.URLInput(attrs={'class': 'form-control', 'id': 'userPortfolio', 'rows': '4',
+                                               'placeholder': "http://anylink.github.io"})
+        }
