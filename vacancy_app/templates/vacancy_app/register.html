@@ -11,10 +11,6 @@
   <main class="container">
     <div class="row">
       <div class="col-8 col-lg-4 offset-2 offset-lg-4">
-{#         <form method="post" action="signup">{% csrf_token %}#}
-{#        <table>{{ form.as_table }}</table>#}
-{#        <button type="submit">Send</button>#}
-{#        </form>#}
 
           <form class="form-signin pt-5" method="post">
             {% csrf_token %}
@@ -26,7 +22,6 @@
           <div class="mt-5 form-label-group">
             <p class="text-muted">Логин</p>
               {{ register_form.login }}
-{#            <input type="text" id="inputLogin" class="form-control" name="login" required autofocus>#}
             <label for="inputLogin"></label>
 
           </div>
@@ -34,21 +29,18 @@
           <div class=" form-label-group">
             <p class="text-muted">Имя</p>
               {{ register_form.first_name }}
-{#            <input type="text" id="inputName" class="form-control" name="first_name" required >#}
             <label for="inputName"></label>
           </div>
 
           <div class=" form-label-group">
             <p class="text-muted">Фамилия</p>
               {{ register_form.last_name }}
-{#            <input type="text" id="inputSurname" class="form-control" name="last_name" required >#}
             <label for="inputSurname"></label>
           </div>
 
           <div class="form-label-group">
             <p class="text-muted"> Пароль</p>
               {{ register_form.password}}
-{#            <input type="password" id="inputPassword" class="form-control" name="password" required>#}
             <label for="inputPassword"></label>
           </div>
           <div class="checkbox mb-3"></div>

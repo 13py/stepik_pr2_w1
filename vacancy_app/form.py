@@ -1,4 +1,5 @@
 from django import forms
+from django.forms import TextInput, Textarea
 
 from vacancy_app.models import Application, Company, Vacancy, Resume
 
@@ -26,7 +27,7 @@ class RegisterForm(forms.Form):
                                      'type': 'text'}))
     password = forms.CharField(max_length=30,
                                min_length=5,
-                               widget=forms.TextInput(attrs={
+                               widget=forms.PasswordInput(attrs={
                                      'class': 'form-control',
                                      'id': 'inputPassword',
                                      'type': 'password'}))
@@ -36,6 +37,11 @@ class ApplicationForm(forms.ModelForm):
     class Meta:
         model = Application
         fields = ('written_username', 'written_phone', 'written_cover_letter')
+        widgets = {
+            'written_username': TextInput(attrs={'class': 'form-control', 'id': 'userName', 'minlength': 3}),
+            'written_phone': TextInput(attrs={'class': 'form-control', 'id': 'userPhone'}),
+            'written_cover_letter': Textarea(attrs={'class': 'form-control', 'id': 'userMsg', 'rows': '8'})
+        }
 
 
 class MyCompanyForm(forms.ModelForm):
@@ -71,3 +77,9 @@ class ResumeForm(forms.ModelForm):
                   'education',
                   'experience',
                   'portfolio')
+        # widgets = {
+        #     'name': TextInput(attrs={'class': 'form-control', 'id': 'userName', 'minlength': 3}),
+        #     'surname': TextInput(attrs={'class': 'form-control', 'id': 'userPhone'}),
+        #     'status': forms.Select(attrs={'class': 'custom-select mr-sm-2', 'id': 'userReady'}),
+        #     'salary': IntegerField(attrs={'class': 'form-control', 'id': 'userPortfolio'}),
+        # }

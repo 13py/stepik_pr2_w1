@@ -117,6 +117,7 @@ class MyCompanyView(View):
             my_company.name = company_clear_data['name']
             my_company.location = company_clear_data['location']
             my_company.employee_count = company_clear_data['employee_count']
+            my_company.description = company_clear_data['description']
             my_company.save()
         return redirect('main')
 
@@ -234,6 +235,7 @@ class SearchView(View):
 
 class MyResumeView(View):
     def get(self, request):
+        form = ResumeForm()
         try:
             request.user.resume
             resume = Resume.objects.filter(user=request.user).first()
@@ -244,7 +246,8 @@ class MyResumeView(View):
                 'resume': resume,
                 'statuses': statuses,
                 'grades': grades,
-                'specialties': specialties
+                'specialties': specialties,
+                'form': form
             }
             template = 'vacancy_app/resume-edit.html'
         except User.resume.RelatedObjectDoesNotExist:

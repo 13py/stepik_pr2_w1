@@ -56,15 +56,18 @@
               <p class="h5 mt-3 font-weight-normal">Отозваться на вакансию</p>
               <div class="form-group">
                 <label class="mb-1 mt-2" for="userName">Вас зовут</label>
-                <input class="form-control" type="text" placeholder="" id="userName" name="written_username">
+{#                <input class="form-control" type="text" placeholder="" id="userName" name="written_username">#}
+                  {{ vacancy_form.written_username }}
               </div>
               <div class="form-group">
                 <label class="mb-1" for="userPhone">Ваш телефон</label>
-                <input class="form-control" type="tel" placeholder="" id="userPhone" name="written_phone">
+{#                <input class="form-control" type="tel" placeholder="" id="userPhone" name="written_phone">#}
+                  {{ vacancy_form.written_phone }}
               </div>
               <div class="form-group">
                 <label class="mb-1" for="userMsg" >Сопроводительное письмо</label>
-                <textarea class="form-control" rows="8" id="userMsg" name="written_cover_letter"></textarea>
+{#                <textarea class="form-control" rows="8" id="userMsg" name="written_cover_letter"></textarea>#}
+                  {{ vacancy_form.written_cover_letter }}
               </div>
               <input type="submit" class="btn btn-primary mt-4 mb-2" value="Записаться на пробный урок">
             </div>
