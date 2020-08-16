@@ -1,6 +1,6 @@
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, AnonymousUser
 from django.contrib.auth.views import LoginView, LogoutView
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.shortcuts import get_object_or_404, redirect
 from django.shortcuts import render
 from django.views import View
@@ -11,8 +11,8 @@ from .models import Specialty, Company, Vacancy, Application, Status, Grade, Res
 
 class MainView(View):
     def get(self, request):
-        specialties = Specialty.objects.all()
-        companies = Company.objects.all()
+        specialties = Specialty.objects.all().annotate(vacancy_count=Count('vacancies'))
+        companies = Company.objects.all().annotate(vacancy_count=Count('vacancies'))
         context = {
             'specialties': specialties,
             'companies': companies
@@ -66,13 +66,18 @@ class VacancyView(View):
         vacancy = get_object_or_404(Vacancy, id=id)
         if vacancy_form.is_valid():
             vacancy_send = vacancy_form.cleaned_data
-            vacancy_send['user'] = request.user
+            if request.user.is_anonymous:
+                return redirect('register')
+            else:
+                vacancy_send['user'] = request.user
             vacancy_send['vacancy'] = vacancy.id
-            Application.objects.create(written_username=vacancy_send['written_username'],
-                                       written_phone=vacancy_send['written_phone'],
-                                       written_cover_letter=vacancy_send['written_cover_letter'],
-                                       user=vacancy_send['user'],
-                                       vacancy=vacancy)
+            Application.objects.create(
+                written_username=vacancy_send['written_username'],
+                written_phone=vacancy_send['written_phone'],
+                written_cover_letter=vacancy_send['written_cover_letter'],
+                user=vacancy_send['user'],
+                vacancy=vacancy
+            )
         vacancy_id = id
         return redirect(f'/vacancies/{vacancy_id}/send')
 
@@ -132,7 +137,7 @@ class MyCompanyVacancyView(View):
         specialties = Specialty.objects.all()
         active_spec = vacancy.specialty
         applications = vacancy.applications.all()
-        applications_count = applications.count()
+        applications_count = len(applications)
         context = {
             'vacancy': vacancy,
             'specialties': specialties,

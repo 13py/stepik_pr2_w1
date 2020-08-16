@@ -35,7 +35,7 @@
             <img class="mx-auto d-block" src="{{ spec.picture.url }}" width="80" height="80" alt="">
             <div class="card-body">
               <p class="card-text mb-2">{{ spec.title }}</p>
-              <p class="card-text"><a href="{% url 'vacancies_cat' spec.code %}">{{ spec.vacancies.count }} вакансий</a></p>
+              <p class="card-text"><a href="{% url 'vacancies_cat' spec.code %}">{{ spec.vacancy_count }} вакансий</a></p>
             </div>
           </div>
         </div>
@@ -55,7 +55,7 @@
             </a>
             <div class="card-body">
               <p class="card-text mb-2">{{ company.name|capfirst }}</p>
-              <p class="card-text"><a href="{% url 'companies' company.id %}">{{ company.vacancies.all.count  }} вакансий</a></p>
+              <p class="card-text"><a href="{% url 'companies' company.id %}">{{ company.vacancy_count  }} вакансий</a></p>
             </div>
           </div>
         </div>
