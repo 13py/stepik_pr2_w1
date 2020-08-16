@@ -25,25 +25,30 @@
           </div>
           <div class="mt-5 form-label-group">
             <p class="text-muted">Логин</p>
-            <input type="text" id="inputLogin" class="form-control" name="login" required autofocus>
+              {{ register_form.login }}
+{#            <input type="text" id="inputLogin" class="form-control" name="login" required autofocus>#}
             <label for="inputLogin"></label>
+
           </div>
 
           <div class=" form-label-group">
             <p class="text-muted">Имя</p>
-            <input type="text" id="inputName" class="form-control" name="first_name" required >
+              {{ register_form.first_name }}
+{#            <input type="text" id="inputName" class="form-control" name="first_name" required >#}
             <label for="inputName"></label>
           </div>
 
           <div class=" form-label-group">
             <p class="text-muted">Фамилия</p>
-            <input type="text" id="inputSurname" class="form-control" name="last_name" required >
+              {{ register_form.last_name }}
+{#            <input type="text" id="inputSurname" class="form-control" name="last_name" required >#}
             <label for="inputSurname"></label>
           </div>
 
           <div class="form-label-group">
             <p class="text-muted"> Пароль</p>
-            <input type="password" id="inputPassword" class="form-control" name="password" required>
+              {{ register_form.password}}
+{#            <input type="password" id="inputPassword" class="form-control" name="password" required>#}
             <label for="inputPassword"></label>
           </div>
           <div class="checkbox mb-3"></div>

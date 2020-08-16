@@ -4,10 +4,32 @@ from vacancy_app.models import Application, Company, Vacancy, Resume
 
 
 class RegisterForm(forms.Form):
-    login = forms.CharField(max_length=30)
-    first_name = forms.CharField(max_length=30)
-    last_name = forms.CharField(max_length=30)
-    password = forms.CharField(max_length=100)
+    login = forms.CharField(max_length=15,
+                            min_length=3,
+                            widget=forms.TextInput(attrs={
+                                'class': 'form-control',
+                                'id': 'inputLogin',
+                                'type': 'text',
+                                'required autofocus': ''}))
+    first_name = forms.CharField(max_length=30,
+                                 min_length=3,
+                                 widget=forms.TextInput(attrs={
+                                     'class': 'form-control',
+                                     'id': 'inputName',
+                                     'type': 'text'}))
+
+    last_name = forms.CharField(max_length=30,
+                                min_length=3,
+                                widget=forms.TextInput(attrs={
+                                     'class': 'form-control',
+                                     'id': 'inputSurname',
+                                     'type': 'text'}))
+    password = forms.CharField(max_length=30,
+                               min_length=5,
+                               widget=forms.TextInput(attrs={
+                                     'class': 'form-control',
+                                     'id': 'inputPassword',
+                                     'type': 'password'}))
 
 
 class ApplicationForm(forms.ModelForm):

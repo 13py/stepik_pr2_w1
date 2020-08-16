@@ -67,7 +67,7 @@ class VacancyView(View):
         if vacancy_form.is_valid():
             vacancy_send = vacancy_form.cleaned_data
             if request.user.is_anonymous:
-                return redirect('register')
+                return redirect('login')
             else:
                 vacancy_send['user'] = request.user
             vacancy_send['vacancy'] = vacancy.id
@@ -169,7 +169,9 @@ class MyLoginView(LoginView):
 
 class RegisterView(View):
     def get(self, request):
-        return render(request, 'vacancy_app/register.html')
+        register_form = RegisterForm(request.POST)
+        context = {'register_form': register_form}
+        return render(request, 'vacancy_app/register.html', context=context)
 
     def post(self, request):
         register_form = RegisterForm(request.POST)
